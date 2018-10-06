@@ -57,14 +57,9 @@ RUN apt-get update && \
         python-tk \
         python3-tk \
         \
-        xserver-xorg-video-dummy \
-        lxde \
-        x11-xserver-utils \
+        xserver-xorg-video-dummy x11-xserver-utils \
+        lxqt openbox pcmanfm-qt qterminal \
         xterm \
-        gnome-themes-standard \
-        gtk2-engines-pixbuf \
-        gtk2-engines-murrine \
-        libcanberra-gtk-module libcanberra-gtk3-module \
         ttf-ubuntu-font-family \
         xfonts-base xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic \
         mesa-utils \
