@@ -62,8 +62,7 @@ RUN apt-get update && \
         xterm \
         ttf-ubuntu-font-family \
         xfonts-base xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic \
-        mesa-utils \
-        libgl1-mesa-dri \
+        mesa-utils libgl1-mesa libgl1-mesa-dri \
         xauth \
         x11vnc \
         \
