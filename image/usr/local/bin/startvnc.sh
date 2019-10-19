@@ -101,9 +101,9 @@ fi
 # startup x11vnc with a new password
 export VNCPASS=`openssl rand -base64 6 | sed 's/\//-/'`
 mkdir -p $HOME/.vnc && \
-x11vnc -storepasswd $VNCPASS ~/.vnc/passwd > $HOME/.log/x11vnc.log 2>&1
+x11vnc -storepasswd $VNCPASS ~/.vnc/passwd$DISP > $HOME/.log/x11vnc.log 2>&1
 
-x11vnc -display :$DISP -rfbport $VNC_PORT -xkb -repeat -skip_dups -forever -shared -usepw >> $HOME/.log/x11vnc.log 2>&1 &
+x11vnc -display :$DISP -rfbport $VNC_PORT -xkb -repeat -skip_dups -forever -shared -rfbauth ~/.vnc/passwd$DISP >> $HOME/.log/x11vnc.log 2>&1 &
 X11VNC_PID=$!
 
 # startup novnc
@@ -120,5 +120,9 @@ ps $NOVNC_PID > /dev/null || { cat $HOME/.log/novnc.log && exit -1; }
 echo "Open your web browser with URL:"
 echo "    http://localhost:$WEB_PORT/vnc.html?resize=downscale&autoconnect=1&password=$VNCPASS"
 echo "or connect your VNC viewer to localhost:$VNC_PORT with password $VNCPASS"
+
+sleep 3
+# Fix issue with Shift-Tab
+xmodmap -e 'keycode 23 = Tab'
 
 wait

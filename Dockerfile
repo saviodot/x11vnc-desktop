@@ -22,14 +22,16 @@ WORKDIR /tmp
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install some required system tools and packages for X Windows and ssh
+# Also remove the message regarding unminimize
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         apt-utils \
+        apt-file \
         locales \
         language-pack-en && \
     locale-gen $LANG && \
     dpkg-reconfigure -f noninteractive locales && \
-    apt-get install -y --no-install-recommends \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         curl \
         less \
         vim \
@@ -53,16 +55,17 @@ RUN apt-get update && \
         dos2unix \
         \
         openssh-server \
-        python \
-        python-tk \
+        python3 \
+        python3-distutils \
         python3-tk \
+        python3-dbus \
         \
         xserver-xorg-video-dummy x11-xserver-utils \
         lxqt openbox pcmanfm-qt qterminal \
         xterm \
         ttf-ubuntu-font-family \
         xfonts-base xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic \
-        mesa-utils libgl1-mesa libgl1-mesa-dri \
+        libopengl0 mesa-utils libglu1-mesa libgl1-mesa-dri libjpeg8 libjpeg62 \
         xauth \
         x11vnc \
         \
@@ -71,19 +74,22 @@ RUN apt-get update && \
     chmod 755 /usr/local/share/zsh/site-functions && \
     apt-get -y autoremove && \
     ssh-keygen -A && \
+    ln -s -f /lib64/ld-linux-x86-64.so.2 /lib64/ld-lsb-x86-64.so && \
     perl -p -i -e 's/#?X11Forwarding\s+\w+/X11Forwarding yes/g; \
         s/#?X11UseLocalhost\s+\w+/X11UseLocalhost no/g; \
         s/#?PasswordAuthentication\s+\w+/PasswordAuthentication no/g; \
         s/#?PermitEmptyPasswords\s+\w+/PermitEmptyPasswords no/g' \
         /etc/ssh/sshd_config && \
+    rm -f /etc/update-motd.d/??-unminimize && \
+    rm -f /etc/xdg/autostart/lxpolkit.desktop && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install websokify and noVNC
 RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
-    python2 get-pip.py && \
-    pip2 install --no-cache-dir \
+    python3 get-pip.py && \
+    pip3 install --no-cache-dir \
         setuptools && \
-    pip2 install -U https://github.com/novnc/websockify/archive/master.tar.gz && \
+    pip3 install -U https://github.com/novnc/websockify/archive/60acf3c.tar.gz && \
     mkdir /usr/local/noVNC && \
     curl -s -L https://github.com/x11vnc/noVNC/archive/master.tar.gz | \
          bsdtar zxf - -C /usr/local/noVNC --strip-components 1 && \
@@ -92,6 +98,8 @@ RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
 # Install x11vnc from source
 # Install X-related to compile x11vnc from source code.
 # https://bugs.launchpad.net/ubuntu/+source/x11vnc/+bug/1686084
+# Also, fix issue with Shift-Tab not working
+# https://askubuntu.com/questions/839842/vnc-pressing-shift-tab-tab-only
 RUN apt-get update && \
     apt-get install -y libxtst-dev libssl-dev libjpeg-dev && \
     \
@@ -102,6 +110,7 @@ RUN apt-get update && \
     ./configure --prefix=/usr/local CFLAGS='-O2 -fno-stack-protector -Wall' && \
     make && \
     make install && \
+    perl -e 's/,\s*ISO_Left_Tab//g' -p -i /usr/share/X11/xkb/symbols/pc && \
     apt-get -y remove libxtst-dev libssl-dev libjpeg-dev && \
     apt-get -y autoremove && \
     ldconfig && \
