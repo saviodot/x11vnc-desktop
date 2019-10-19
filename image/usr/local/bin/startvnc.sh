@@ -63,6 +63,8 @@ fi
 VNC_PORT=$((5900 + DISP))
 WEB_PORT=$((6080 + DISP))
 
+export XDG_RUNTIME_DIR=/tmp/runtime-$USER
+mkdir -p -m 0700 $XDG_RUNTIME_DIR
 export DISPLAY=:$DISP.0
 export LOGFILE=$HOME/.log/Xorg.log
 export NO_AT_BRIDGE=1
@@ -122,7 +124,8 @@ echo "    http://localhost:$WEB_PORT/vnc.html?resize=downscale&autoconnect=1&pas
 echo "or connect your VNC viewer to localhost:$VNC_PORT with password $VNCPASS"
 
 sleep 3
-# Fix issue with Shift-Tab
+# Fix issues with Shift-Tab and dbus
 xmodmap -e 'keycode 23 = Tab'
+killall dbus-launch 2> /dev/null || true
 
 wait
