@@ -63,8 +63,7 @@ RUN apt-get update && \
         python3-dbus \
         \
         xserver-xorg-video-dummy x11-xserver-utils lxterminal xterm \
-        openbox lxqt obconf ubuntukylin-wallpapers-eoan \
-        adwaita-icon-theme humanity-icon-theme papirus-icon-theme \
+        openbox lxqt obconf papirus-icon-theme \
         ttf-ubuntu-font-family \
         xfonts-base xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic \
         libopengl0 mesa-utils libglu1-mesa libgl1-mesa-dri libjpeg8 libjpeg62 \
