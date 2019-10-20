@@ -7,7 +7,7 @@
 # Authors:
 # Xiangmin Jiao <xmjiao@gmail.com>
 
-FROM ubuntu:18.04
+FROM ubuntu:19.10
 LABEL maintainer Xiangmin Jiao <xmjiao@gmail.com>
 
 ARG DOCKER_LANG=en_US
@@ -42,7 +42,7 @@ RUN apt-get update && \
         man \
         sudo \
         rsync \
-        bsdtar \
+        libarchive-tools \
         net-tools \
         gpg-agent \
         inetutils-ping \
@@ -56,14 +56,15 @@ RUN apt-get update && \
         dbus-x11 \
         \
         openssh-server \
+        python2 \
         python3 \
         python3-distutils \
         python3-tk \
         python3-dbus \
         \
-        xserver-xorg-video-dummy x11-xserver-utils \
-        lxqt openbox pcmanfm-qt qterminal \
-        xterm \
+        xserver-xorg-video-dummy x11-xserver-utils lxterminal xterm \
+        openbox lxqt obconf ubuntukylin-wallpapers-eoan \
+        adwaita-icon-theme humanity-icon-theme papirus-icon-theme \
         ttf-ubuntu-font-family \
         xfonts-base xfonts-100dpi xfonts-75dpi xfonts-scalable xfonts-cyrillic \
         libopengl0 mesa-utils libglu1-mesa libgl1-mesa-dri libjpeg8 libjpeg62 \
@@ -72,10 +73,14 @@ RUN apt-get update && \
         \
         firefox \
         xpdf && \
+    apt remove -y qlipper pulseaudio lxqt-powermanagement && \
+    apt autoremove -y && \
+    ln -s -f /usr/bin/python2 /usr/bin/python && \
     chmod 755 /usr/local/share/zsh/site-functions && \
     apt-get -y autoremove && \
     ssh-keygen -A && \
     ln -s -f /lib64/ld-linux-x86-64.so.2 /lib64/ld-lsb-x86-64.so && \
+    strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5 && \
     perl -p -i -e 's/#?X11Forwarding\s+\w+/X11Forwarding yes/g; \
         s/#?X11UseLocalhost\s+\w+/X11UseLocalhost no/g; \
         s/#?PasswordAuthentication\s+\w+/PasswordAuthentication no/g; \
@@ -84,6 +89,8 @@ RUN apt-get update && \
     rm -f /etc/update-motd.d/??-unminimize && \
     rm -f /etc/xdg/autostart/lxpolkit.desktop && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# strip --remove-section=.note.ABI-tag /usr/lib/x86_64-linux-gnu/libQt5Core.so.5
 
 # Install websokify and noVNC
 RUN curl -O https://bootstrap.pypa.io/get-pip.py && \

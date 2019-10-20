@@ -63,8 +63,7 @@ fi
 VNC_PORT=$((5900 + DISP))
 WEB_PORT=$((6080 + DISP))
 
-export XDG_RUNTIME_DIR=/tmp/runtime-$USER
-mkdir -p -m 0700 $XDG_RUNTIME_DIR
+export XDG_RUNTIME_DIR=$(mktemp -d -t runtime-$USER-XXXXX)
 export DISPLAY=:$DISP.0
 export LOGFILE=$HOME/.log/Xorg.log
 export NO_AT_BRIDGE=1
@@ -81,11 +80,12 @@ perl -i -p -e "s/Virtual \d+ \d+/Virtual $SCREEN_SIZE/" $HOME/.config/X11/xorg.c
 
 # Start Xorg
 mkdir -p $HOME/.log
+sleep 0.2
 Xorg -noreset +extension GLX +extension RANDR +extension RENDER \
     -logfile $HOME/.log/Xorg.log -config $HOME/.config/X11/xorg.conf :$DISP \
     2> $HOME/.log/Xorg_err.log &
 XORG_PID=$!
-sleep 0.1
+sleep 0.2
 
 # start ssh-agent if not set by caller and stop if automatically
 if [ -z "$SSH_AUTH_SOCK" ]; then
@@ -124,8 +124,5 @@ echo "    http://localhost:$WEB_PORT/vnc.html?resize=downscale&autoconnect=1&pas
 echo "or connect your VNC viewer to localhost:$VNC_PORT with password $VNCPASS"
 
 sleep 3
-# Fix issues with Shift-Tab and dbus
-xmodmap -e 'keycode 23 = Tab'
-killall dbus-launch 2> /dev/null || true
 
 wait
