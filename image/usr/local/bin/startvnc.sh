@@ -43,8 +43,8 @@ done
 # Set timezone if specified
 if [ -n "$TIMEZONE" ]; then
     if [ -f "/usr/share/zoneinfo/$TIMEZONE" ]; then
-        echo "$TIMEZONE" > /etc/timezone && \
-        ln -s -f /usr/share/zoneinfo/$TIMEZONE /etc/localtime
+        echo "$TIMEZONE" | sudo tee /etc/timezone > /dev/null && \
+        sudo ln -s -f /usr/share/zoneinfo/$TIMEZONE /etc/localtime
     else
         echo "Could not find /usr/share/zoneinfo/$TIMEZONE"
     fi

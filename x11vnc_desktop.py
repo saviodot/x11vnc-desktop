@@ -131,7 +131,7 @@ def parse_args(description):
             import tzlocal
             args.timezone = tzlocal.get_localzone().zone
         except:
-            args.timezone = 'America/New_York'
+            pass
 
     return args
 
