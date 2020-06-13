@@ -1,0 +1,3 @@
+If you experience erratic repeating keystrokes, which may happen
+when using VNC over a high-latency network, issue the `xset -r`
+command to disable key auto repeat.
