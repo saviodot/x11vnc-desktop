@@ -40,6 +40,16 @@ for var in $(env | cut -d= -f1 | grep -E \
     unset $var
 done
 
+# Set timezone if specified
+if [ -n "$TIMEZONE" ]; then
+    if [ -f "/usr/share/zoneinfo/$TIMEZONE" ]; then
+        echo "$TIMEZONE" > /etc/timezone && \
+        ln -s -f /usr/share/zoneinfo/$TIMEZONE /etc/localtime
+    else
+        echo "Could not find /usr/share/zoneinfo/$TIMEZONE"
+    fi
+fi
+
 # Start up xdummy with the given size
 if [ -n "$2" ]; then
     RESOLUT=$2

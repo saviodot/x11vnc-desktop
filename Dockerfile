@@ -86,6 +86,7 @@ RUN apt-get update && \
         s/#?PasswordAuthentication\s+\w+/PasswordAuthentication no/g; \
         s/#?PermitEmptyPasswords\s+\w+/PermitEmptyPasswords no/g' \
         /etc/ssh/sshd_config && \
+    echo "Set disable_coredump false" >> /etc/sudo.conf && \
     rm -f /etc/update-motd.d/??-unminimize && \
     rm -f /etc/xdg/autostart/lxpolkit.desktop && \
     chmod a-x /usr/bin/lxpolkit && \

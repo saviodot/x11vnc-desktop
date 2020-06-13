@@ -87,6 +87,13 @@ def parse_args(description):
                         'You can also set a password using the VNCPASS environment variable.',
                         default="")
 
+    parser.add_argument('--timezone',
+                        help='Specify the timezone to be used, such as America/New_York, manually. It is ' +
+                        'preferable to install the tzlocal Python package on your host (e.g., using pip), ' +
+                        'and the Docker instance will automatically inherit the timezone of the host when  ' +
+                        'this argument is not used. If both fail, then the timezone will default to America/New_York.',
+                        default="")
+
     parser.add_argument('-N', '--nvidia',
                         help='Mount the Nvidia card for GPU computation. ' +
                         '(Linux only, experimental, sudo required).',
@@ -115,8 +122,16 @@ def parse_args(description):
             pass
         else:
             args.image += ':' + args.tag
+
     if args.password == '':
         args.password = os.getenv('VNCPASS', '')
+
+    if args.timezone == '':
+        try:
+            import tzlocal
+            args.timezone = tzlocal.get_localzone().zone
+        except:
+            args.timezone = 'America/New_York'
 
     return args
 
@@ -353,6 +368,7 @@ if __name__ == "__main__":
 
     envs = ["--hostname", container,
             "--env", "VNCPASS=" + args.password,
+            "--env", "TIMEZONE=" + args.timezone,
             "--env", "RESOLUT=" + size,
             "--env", "HOST_UID=" + uid]
 

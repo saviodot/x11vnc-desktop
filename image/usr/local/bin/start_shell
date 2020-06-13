@@ -1,4 +1,8 @@
 #!/bin/bash
 
-cat $DOCKER_HOME/WELCOME 2> /dev/null
+if [ -f $DOCKER_HOME/WELCOME ]; then
+    cat $DOCKER_HOME/WELCOME 2> /dev/null
+else
+    echo Welcome to `lsb_release -d -s`!
+fi
 exec $SHELL -l
