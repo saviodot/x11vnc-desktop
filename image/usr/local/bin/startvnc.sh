@@ -27,7 +27,7 @@ if [ "$1" = "-h" -o "$1" = "--help" ]; then
     echo "    $CMD [-s resolution]"
     echo
     echo "where resolution has the format <width>x<height>. The default resolution"
-    echo "is 1440x900."
+    echo "is 3840x2160."
     exit
 fi
 
@@ -44,7 +44,7 @@ done
 if [ -n "$2" ]; then
     RESOLUT=$2
 else
-    RESOLUT="${RESOLUT:-1440x900}"
+    RESOLUT="${RESOLUT:-3840x2160}"
 fi
 SCREEN_SIZE=`echo $RESOLUT | sed -e "s/x/ /"`
 
