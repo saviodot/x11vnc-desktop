@@ -74,7 +74,7 @@ def parse_args(description):
     parser.add_argument('-s', '--size',
                         help='Size of the screen, such as 1440x900. The default ' +
                         'is to use the current screen size.',
-                        default="")
+                        default="3840x2160")
 
     parser.add_argument('-n', '--no-browser',
                         help='Do not start web browser. It is false by default, unless ' + 
@@ -357,7 +357,7 @@ if __name__ == "__main__":
             "--env", "HOST_UID=" + uid]
 
     # Find a free port for ssh tunning
-    port_ssh = str(find_free_port(2222, 50))
+    port_ssh = str(2222)
     if not port_ssh:
         stderr_write("Error: Could not find a free port.\n")
         sys.exit(-1)
@@ -379,8 +379,8 @@ if __name__ == "__main__":
             devices += ['--device', d + ':' + d]
 
     # Start the docker image in the background and pipe the stderr
-    port_http = str(find_free_port(6080, 50))
-    port_vnc = str(find_free_port(5950, 50))
+    port_http = str(6081)
+    port_vnc = str(5901)
 
     if not port_http or not port_vnc:
         stderr_write("Error: Could not find a free port.\n")
