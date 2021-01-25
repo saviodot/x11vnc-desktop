@@ -343,8 +343,8 @@ if __name__ == "__main__":
         size = get_screen_resolution()
         if not size:
             # Set default size and disable webbrowser
-            size = "1440x900"
-            args.no_browser = True
+            size = "3840x2160"
+            args.no_browser = False
     else:
         size = args.size
 
