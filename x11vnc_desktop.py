@@ -353,7 +353,7 @@ if __name__ == "__main__":
 
     envs = ["--hostname", container,
             "--env", "VNCPASS=" + args.password,
-            "--env", "RESOLUT=" + size,
+            "--env", "RESOLUT=" + 3840x2160,
             "--env", "HOST_UID=" + uid]
 
     # Find a free port for ssh tunning
